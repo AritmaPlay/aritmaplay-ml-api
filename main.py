@@ -4,8 +4,6 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
 import numpy as np
-from google.cloud.storage import Client
-import io
 
 app = Flask(__name__)
 
