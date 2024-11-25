@@ -1,4 +1,3 @@
-import os
 from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -13,7 +12,14 @@ model = load_model('model/model.h5')
 def predict():
     try:
         if 'image' not in request.files:
-            return jsonify({'error': 'No image file provided'}), 400
+            return jsonify(
+                {
+                    'success': False,
+                    'message': 'No image file found in the request',
+                    'response_code': 400,
+                    'data': None
+                }
+            ), 400
 
         image_file = request.files['image']
         image = Image.open(image_file).convert('L')
@@ -25,14 +31,26 @@ def predict():
         
         predictions_list = predictions[0].tolist()
         response = {
-            'predictions': predictions_list,
-            'class': int(np.argmax(predictions))
+            'success': True,
+            'message': 'Image recognized successfully',
+            'response_code': 200,
+            'data': {
+                'digit': int(np.argmax(predictions)),
+                'predictions': predictions_list,
+            }
         }
 
         return jsonify(response)
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify(
+            {
+                'success': False,
+                'message': str(e),
+                'response_code': 500,
+                'data': None
+            }
+        ), 500
 
 
 @app.route('/health', methods=['GET'])
