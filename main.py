@@ -36,7 +36,7 @@ def predict():
             'response_code': 200,
             'data': {
                 'digit': int(np.argmax(predictions)),
-                'predictions': predictions_list,
+                'probabilities': predictions_list,
             }
         }
 
