@@ -1,12 +1,25 @@
+import os
 from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
 import numpy as np
+import requests
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
-model = load_model('model/model.h5')
+load_dotenv()
+
+LATEST_MODEL_URL = os.getenv("LATEST_MODEL_URL")
+DESTINATION_MODEL_PATH = os.getenv("DESTINATION_MODEL_PATH")
+
+response = requests.get(LATEST_MODEL_URL)
+
+with open(DESTINATION_MODEL_PATH, 'wb') as f:
+    f.write(response.content)
+
+model = load_model(DESTINATION_MODEL_PATH)
 
 @app.route('/predict', methods=['POST'])
 def predict():
