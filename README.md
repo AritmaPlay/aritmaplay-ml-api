@@ -15,13 +15,37 @@ git clone https://github.com/AritmaPlay/aritmaplay-ml-api.git
 cd aritmaplay-ml-api
 ```
 
-2. Build the docker image.
+2. Create `.env` file
+
+- If you host your own model, set your URL value in your `.env` according to the example in `.env.example`
+
+- If not, set the `.env` file and comment these lines in `main.py` and then save
+
+`.env`
+```env
+DESTINATION_MODEL_PATH=model/model.h5
+```
+`main.py`
+```python
+# LATEST_MODEL_URL = os.getenv("LATEST_MODEL_URL")
+DESTINATION_MODEL_PATH = os.getenv("DESTINATION_MODEL_PATH")
+
+# response = requests.get(LATEST_MODEL_URL)
+
+# with open(DESTINATION_MODEL_PATH, 'wb') as f:
+    # f.write(response.content)
+
+model = load_model(DESTINATION_MODEL_PATH)
+
+```
+
+3. Build the docker image.
 ```bash
 docker build -t ml-api .
 ```
-3. Run the docker container.
+1. Run the docker container.
 ```bash
-docker run -d --name api-container -p 8080:8080 ml-api
+docker run -d --name api-container --env-file .env -p 8080:8080 ml-api
 ```
 ## Api Endpoints
 ### GET Health
