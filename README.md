@@ -43,7 +43,7 @@ model = load_model(DESTINATION_MODEL_PATH)
 ```bash
 docker build -t ml-api .
 ```
-1. Run the docker container.
+4. Run the docker container.
 ```bash
 docker run -d --name api-container --env-file .env -p 8080:8080 ml-api
 ```
